@@ -1,8 +1,10 @@
-import math,time
+import math
 
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+
+global_n = 100
 
 
 def compute_prime(num):
@@ -37,8 +39,18 @@ def normal_echo():
 def echo_with_process():
     content = request.get_json()
     n = content["number"]
+    n = max(n, global_n)
     v = compute_prime(n)
     return jsonify(content)
+
+
+@app.route('/set-global-n', methods=['POST'])
+def set_global_n():
+    global global_n
+    content = request.get_json()
+    n = content["number"]
+    global_n = n
+    return jsonify({"success": True})
 
 
 if __name__ == '__main__':
